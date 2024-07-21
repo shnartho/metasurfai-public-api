@@ -5,11 +5,8 @@ Welcome to the MetaSurfAI API Server repository! This project provides an API se
 ## Table of Contents
 
 - [Overview](#overview)
-- [Features](#features)
-- [Installation](#installation)
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
-- [Configuration](#configuration)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -17,4 +14,5 @@ Welcome to the MetaSurfAI API Server repository! This project provides an API se
 
 MetaSurfAI API Server is designed to serve and provide various metasurfai functionalities. It supports multiple endpoints for different tasks including data get, post, and more.
 
-
+## License
+This project is licensed under the MIT License 
