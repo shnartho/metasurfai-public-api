@@ -4,3 +4,14 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+axum = "0.6" # Latest version is 0.6, confirm if you want to use the latest
+tokio = { version = "1.34", features = ["full"] } # Updated version
+tower = "0.4" # Confirm if this is the latest
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0" # Confirm if this is the latest
+thiserror = "1.0" # Confirm if this is the latest
+
+[dev-dependencies]
+tokio = { version = "1.34", features = ["full"] } # Updated version
+axum = "0.6" # Confirm if this is the latest
+mockito = "1.0" # Confirm if this is the latest
