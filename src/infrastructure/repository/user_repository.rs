@@ -1,10 +1,10 @@
 use crate::domain::model::user::User;
 
 pub fn find_user_by_username(username: &str) -> Option<User> {
-    if username == "jemal" {
+    if username == "nayem" {
         Some (User {
-            username: "jemal".to_string(),
-            password: "muntasir".to_string(),
+            username: "nayem".to_string(),
+            password: "123".to_string(),
         })
     } else {
         None
