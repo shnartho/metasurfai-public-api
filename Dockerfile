@@ -1,11 +1,11 @@
-FROM rust:latest as builder
-WORKDIR /usr/src/app
-COPY Cargo.toml Cargo.lock ./
-COPY src ./src
-RUN cargo fetch
+FROM rust:1.68.2 as builder
+WORKDIR /app
+COPY . .
 RUN cargo build --release
 
-FROM debian:buster-slim
-WORKDIR /usr/src/app
-COPY --from=builder /usr/src/app/target/release/metasurfai-public-api .
+FROM debian:bullseye-slim
+RUN apt-get update && apt-get install -y libssl-dev
+WORKDIR /app
+COPY --from=builder /app/target/release/metasurfai-public-api .
+EXPOSE 8080
 CMD ["./metasurfai-public-api"]
