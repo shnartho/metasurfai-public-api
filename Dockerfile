@@ -1,8 +1,8 @@
 FROM rust:latest as builder
 WORKDIR /usr/src/app
 COPY Cargo.toml Cargo.lock ./
-RUN cargo fetch
 COPY src ./src
+RUN cargo fetch
 RUN cargo build --release
 
 FROM debian:buster-slim
