@@ -2,7 +2,6 @@ use axum::{
     routing::{get, Router},
     Json,
 };
-use std::net::SocketAddr;
 use serde::Serialize;
 
 #[derive(Serialize)]
@@ -20,7 +19,7 @@ async fn hello() -> Json<HelloResponse> {
 async fn main() {
     let app = Router::new().route("/v1", get(hello));
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], 80));
+    let addr = "[::]:8080".parse().unwrap();
     println!("Listening on {:?}", addr);
     axum::Server::bind(&addr)
         .serve(app.into_make_service())

@@ -14,5 +14,11 @@ Welcome to the MetaSurfAI API Server repository! This project provides an API se
 
 MetaSurfAI API Server is designed to serve and provide various metasurfai functionalities. It supports multiple endpoints for different tasks including data get, post, and more.
 
+## Test Locally
+
+- open cmd/terminal
+- cd `project/root/dir`
+- run`make run`
+
 ## License
 This project is licensed under the MIT License 
