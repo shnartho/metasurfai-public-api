@@ -27,7 +27,8 @@ async fn main() -> Result<(), hyper::Error> {
                 .layer(Extension(auth))
                 .into_inner()
         );
-        
+
+    println!("Server is running at http://[::]:8080");        
     axum::Server::bind(&"[::]:8080".parse().unwrap())
         .serve(app.into_make_service())
         .await
