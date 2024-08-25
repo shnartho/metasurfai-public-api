@@ -8,6 +8,7 @@ use axum::{
     extract::Extension,
 };
 use tower::ServiceBuilder;
+use tower_http::cors::{CorsLayer, Any};
 use application::router::handlers::auth_handler::login;
 use application::router::handlers::profile_handler::profile_handler;
 use application::router::handlers::ads_handler::ads_handler;
@@ -18,6 +19,11 @@ use std::sync::Arc;
 async fn main() -> Result<(), hyper::Error> {
     let auth = Arc::new(Auth);
 
+    let cors = CorsLayer::new()
+        .allow_origin(Any)
+        .allow_methods(Any)
+        .allow_headers(Any);
+
     let app = Router::new()
         .route("/v1", get(ads_handler))
         .route("/v1/login", post(login))
@@ -25,6 +31,7 @@ async fn main() -> Result<(), hyper::Error> {
         .layer(
             ServiceBuilder::new()
                 .layer(Extension(auth))
+                .layer(cors) // Add CORS middleware
                 .into_inner()
         );
         
