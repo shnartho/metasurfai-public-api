@@ -4,12 +4,13 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-axum = "0.6" # Web framework
-tokio = { version = "1.34", features = ["full"] } # Async runtime
-tower = "0.4" # Middleware and utilities for Axum
-tower-http = { version = "0.4.0", features = ["cors"] }
-serde = { version = "1.0", features = ["derive"] } # Serialization/deserialization
-serde_json = "1.0" # JSON handling
-thiserror = "1.0" # Custom error types
-jsonwebtoken = "7.2.0" # JWT handling
+axum = "0.6" 
 hyper = "0.14"
+jsonwebtoken = "7.2.0" 
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0" 
+tokio = { version = "1.34", features = ["full"] } 
+tower = "0.4" 
+tower-http = { version = "0.4.0", features = ["cors"] }
+thiserror = "1.0" 
+rand = "0.8"
