@@ -1,5 +1,5 @@
 use crate::domain::model::ads::Ads;
-use rand:Rng;
+use rand::Rng;
 
 pub fn get_ads_from_db() -> Vec<Ads> {
     let ads_link = vec![
@@ -22,16 +22,17 @@ pub fn get_ads_from_db() -> Vec<Ads> {
         "https://i.postimg.cc/W13nQ50g/house2.png".to_string(),
     ];
 
+    let mut rng = rand::thread_rng();
     let mut ads = Vec::new();
 
     for (i, link) in ads_link.iter().enumerate() {
-        let random_price: i32 = rng.gen_range(1..=100);
+        let random_price = rng.gen_range(1..=100);
 
         ads.push(
             Ads::new(
                 format!("Special Discount Burger {}", i),
-                format!("{}",ads_link[i]),
-                (i+1) * 100,
+                link.to_string(),
+                random_price,
                 format!("Description for ad {}", i),
                 "nayem".to_string(),
                 true,
