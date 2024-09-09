@@ -7,11 +7,18 @@ pub struct Profile {
     balance: f64,
     region: String,
     country: String,
-    safebrowse: bool
+    safebrowse: bool,
 }
 
 impl Profile {
-    pub fn new(username: String, email: String, balance: f64, region: String, country: String, safebrowse: bool) -> Self {
+    pub fn new(
+        username: String,
+        email: String,
+        balance: f64,
+        region: String,
+        country: String,
+        safebrowse: bool,
+    ) -> Self {
         Profile {
             username,
             email,

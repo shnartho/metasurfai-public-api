@@ -30,6 +30,11 @@ clean:
 format:
 	$(CARGO) fmt
 
+# Fix coding style and lints
+cs-fix:
+	$(CARGO) fmt
+	$(CARGO) clippy --fix --allow-dirty --allow-staged
+
 # Build the documentation
 doc:
 	$(CARGO) doc
@@ -46,4 +51,4 @@ release:
 clean-all: clean
 	rm -rf $(BUILD_DIR)
 
-.PHONY: all build test run check clean format doc bench release clean-all
+.PHONY: all build test run check clean format doc bench release clean-all cs-fix

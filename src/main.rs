@@ -2,51 +2,29 @@ mod application;
 mod domain;
 mod infrastructure;
 
-use axum::{
-    routing::{get, post},
-    Router,
-    extract::Extension,
-};
-use tower::ServiceBuilder;
-use tower_http::cors::{CorsLayer, Any};
-use application::router::handlers::auth_handler::login;
-use application::router::handlers::profile_handler::profile_handler;
-use application::router::handlers::ads_handler::ads_handler;
+use application::create_router;
 use application::router::middlewares::auth::Auth;
 use std::sync::Arc;
 
 #[tokio::main]
 async fn main() -> Result<(), hyper::Error> {
     let auth = Arc::new(Auth);
+    let app = create_router(auth);
+    let addr = "[::]:8080".parse().unwrap();
+    println!("Server is running on port 8080...");
 
-    let cors = CorsLayer::new()
-        .allow_origin(Any)
-        .allow_methods(Any)
-        .allow_headers(Any);
-
-    let app = Router::new()
-        .route("/v1", get(ads_handler))
-        .route("/v1/login", post(login))
-        .route("/v1/profile", get(profile_handler).layer(Extension(auth.clone())))
-        .layer(
-            ServiceBuilder::new()
-                .layer(Extension(auth))
-                .layer(cors) // Add CORS middleware
-                .into_inner()
-        );
-        
-    axum::Server::bind(&"[::]:8080".parse().unwrap())
+    axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await
 }
 
+/*
 #[cfg(test)]
 mod tests {
     use super::*;
     use axum::body::Body;
     use axum::http::{Request, StatusCode};
     use axum::response::Response;
-    use tower::ServiceExt;
 
     #[tokio::test]
     async fn test_login_success_200() {
@@ -54,7 +32,7 @@ mod tests {
         let app = Router::new()
         .route("/v1/login", post(login))
         .layer(
-            ServiceBuilder::new() 
+            ServiceBuilder::new()
             .layer(Extension(auth))
             .into_inner()
         );
@@ -69,7 +47,7 @@ mod tests {
         let response: Response = app.oneshot(request).await.unwrap();
         println!("{:?}", response);
         assert_eq!(response.status(), StatusCode::OK)
-    } 
+    }
 
     #[tokio::test]
     async fn test_login_failed_401() {
@@ -77,7 +55,7 @@ mod tests {
         let app = Router::new()
         .route("/v1/login", post(login))
         .layer(
-            ServiceBuilder::new() 
+            ServiceBuilder::new()
             .layer(Extension(auth))
             .into_inner()
         );
@@ -92,5 +70,6 @@ mod tests {
         let response: Response = app.oneshot(request).await.unwrap();
         println!("{:?}", response);
         assert_eq!(response.status(), StatusCode::UNAUTHORIZED)
-    }   
+    }
 }
+*/

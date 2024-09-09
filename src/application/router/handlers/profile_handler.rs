@@ -1,7 +1,7 @@
 use crate::domain::service::profile_service::get_profile;
-use axum::response::{IntoResponse, Response};
-use axum::http::StatusCode;
 use axum::extract::Query;
+use axum::http::StatusCode;
+use axum::response::{IntoResponse, Response};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -19,11 +19,9 @@ pub async fn profile_handler(Query(params): Query<ProfileQuery>) -> impl IntoRes
                 .body(axum::body::Body::from(profile_json))
                 .unwrap()
         }
-        None => {
-            Response::builder()
-                .status(StatusCode::INTERNAL_SERVER_ERROR)
-                .body(axum::body::Body::from("Failed to get profile"))
-                .unwrap()
-        }
+        None => Response::builder()
+            .status(StatusCode::INTERNAL_SERVER_ERROR)
+            .body(axum::body::Body::from("Failed to get profile"))
+            .unwrap(),
     }
 }

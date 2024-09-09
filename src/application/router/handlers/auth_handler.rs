@@ -1,9 +1,5 @@
 use crate::domain::service::auth_service::authenticate;
-use axum::{
-    extract::Json,
-    http::StatusCode,
-    response::IntoResponse,
-};
+use axum::{extract::Json, http::StatusCode, response::IntoResponse};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]

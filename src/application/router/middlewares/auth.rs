@@ -1,9 +1,9 @@
+use crate::application::router::middlewares::jwt::validate_token;
 use axum::{
     async_trait,
     extract::FromRequest,
-    http::{StatusCode, Request},
+    http::{Request, StatusCode},
 };
-use crate::application::router::middlewares::jwt::validate_token;
 
 #[derive(Clone, Debug)]
 pub struct Auth;
@@ -28,6 +28,9 @@ where
                 }
             }
         }
-        Err((StatusCode::UNAUTHORIZED, "Missing or invalid authorization header".into()))
+        Err((
+            StatusCode::UNAUTHORIZED,
+            "Missing or invalid authorization header".into(),
+        ))
     }
 }
