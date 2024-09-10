@@ -11,8 +11,15 @@ pub struct MongodbRepository {
 
 impl MongodbRepository {
     pub async fn new() -> Result<Self, Box<dyn std::error::Error>> {
-        let username = env::var("MONGODB_USERNAME").expect("MONGODB_USERNAME must be set");
-        let password = env::var("MONGODB_PASSWORD").expect("MONGODB_PASSWORD must be set");
+        let username = env::var("MONGODB_USERNAME").ok();
+        let password = env::var("MONGODB_PASSWORD").ok();
+
+        let (username, password) = match (username, password) {
+            (Some(u), Some(p)) => (u, p),
+            _ => {
+                return Err("Missing env variables".into())
+            }
+        };
 
         let auth_url = "https://eu-west-2.aws.services.cloud.mongodb.com/api/client/v2.0/app/data-nzlzdhy/auth/providers/local-userpass/login";
         let auth_data = json!({
