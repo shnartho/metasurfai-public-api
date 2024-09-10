@@ -1,10 +1,11 @@
-FROM rust:1.68.2 as builder
+FROM rust:latest as builder
 WORKDIR /app
 COPY . .
 RUN cargo build --release
 
-FROM debian:bullseye-slim
-RUN apt-get update && apt-get install -y libssl-dev
+FROM debian:bookworm-slim
+RUN apt-get update && apt-get install -y libssl3 ca-certificates
+
 WORKDIR /app
 COPY --from=builder /app/target/release/metasurfai-public-api .
 EXPOSE 8080

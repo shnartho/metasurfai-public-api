@@ -11,8 +11,8 @@ async fn main() -> Result<(), hyper::Error> {
     let auth = Arc::new(Auth);
     let app = create_router(auth);
     let addr = "[::]:8080".parse().unwrap();
+    
     println!("Server is running on port 8080...");
-
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await
