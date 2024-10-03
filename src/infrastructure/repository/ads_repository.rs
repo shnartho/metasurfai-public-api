@@ -1,4 +1,4 @@
-use crate::{domain::model::ads::Ads, infrastructure::repository::mongodb_repo::MongodbRepository};
+use crate::{domain::model::ads::{Ads, CreateAdResponse}, infrastructure::repository::mongodb_repo::MongodbRepository};
 use rand::Rng;
 
 pub struct AdsRepository;
@@ -12,6 +12,18 @@ impl AdsRepository {
         let db = MongodbRepository::new().await?;
         let ads: Vec<Ads> = db.get_ads_from_mongo_db().await?;
         Ok(ads)
+    }
+
+    pub async fn create_ads_in_db(&self, ad: Ads) -> Result<CreateAdResponse, Box<dyn std::error::Error>> {
+        let db = MongodbRepository::new().await?;
+        let ads: CreateAdResponse = db.create_ads_in_db(ad).await?;
+        Ok(ads)
+    }
+
+    pub async fn delete_ads_in_db(&self, id: String) -> Result<(), Box<dyn std::error::Error>> {
+        let db = MongodbRepository::new().await?;
+        db.delete_ads_by_id(&id).await?;
+        Ok(())
     }
 
     pub async fn generate_ads(&self) -> Vec<Ads> {
