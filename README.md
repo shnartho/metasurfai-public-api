@@ -16,7 +16,7 @@ Welcome to the MetaSurfAI API Server repository! This project provides an API se
 - get ads from db `GET` `https://metasurfai-public-api.fly.dev/v2`
 - create ads in db `POST` `https://metasurfai-public-api.fly.dev/v2/createOneAds`
 
-```
+```json
 {
     "title": "test Nayem",
     "image_url": "https://i.postimg.cc/wTr6w5GD/burger-ads.jpg",
@@ -32,7 +32,7 @@ Welcome to the MetaSurfAI API Server repository! This project provides an API se
 
 - delete ads in db `DELETE` `https://metasurfai-public-api.fly.dev/v2/deleteOneAds`
 
-```
+```json
 {
     "id":"66fde9ec9505c5e64242e982"
 }
