@@ -10,16 +10,6 @@ Welcome to the MetaSurfAI API Server repository! This project provides an API se
 - [Contributing](#contributing)
 - [License](#license)
 
-## Overview
-
-MetaSurfAI API Server is designed to serve and provide various metasurfai functionalities. It supports multiple endpoints for different tasks including data get, post, and more.
-
-## Test Locally
-
-- open cmd/terminal
-- cd `project/root/dir`
-- run`make run`
-
 ## Test Public Api
 
 - get sample ads `GET` `https://metasurfai-public-api.fly.dev/v1`
@@ -51,5 +41,10 @@ MetaSurfAI API Server is designed to serve and provide various metasurfai functi
 - login with username and password `https://metasurfai-public-api.fly.dev/v1/login`
 - Sample profile endpoint `https://metasurfai-public-api.fly.dev/v1/profile?username=nayem`
 
-## License
-This project is licensed under the MIT License 
+## Test Locally
+
+- open cmd/terminal
+- cd `project/root/dir`
+- run`make run`
+
+![Funny GIF](https://media.giphy.com/media/s51QoNAmM6dkWcSC0P/giphy.gif?cid=790b7611q1p4oj3wetxecugn3qgfrnvda5w17sa8qbpq2kbo&ep=v1_gifs_search&rid=giphy.gif&ct=g)
