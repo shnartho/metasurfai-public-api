@@ -37,7 +37,10 @@ impl UserService {
             .repo
             .find_user_by_email_from_db(user.email.clone())
             .await
-            .map_err(|_| AppError::DatabaseOperationFailed)?;
+            .map_err(|e| {
+                dbg!(&e);  
+                AppError::DatabaseOperationFailed
+            })?;
 
         if existing_user.is_some() {
             return Err(AppError::UserAlreadyExists);

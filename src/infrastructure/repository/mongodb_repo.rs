@@ -68,7 +68,7 @@ impl MongodbRepository {
             );
             headers
         };
-
+    
         let payload = json!({
             "collection": "users",
             "database": "appmsai",
@@ -77,7 +77,7 @@ impl MongodbRepository {
                 "email": email
             }
         });
-
+    
         let client = reqwest::Client::new();
         let api_response = client
             .post(api_url)
@@ -85,22 +85,23 @@ impl MongodbRepository {
             .json(&payload)
             .send()
             .await?;
-
-        let api_response_status = api_response.status();
-        if api_response_status == StatusCode::OK {
-            let api_response_json: serde_json::Value = api_response.json().await?;
-            dbg!(&api_response_json);
-
-            if let Some(document) = api_response_json.get("document") {
-                let user = serde_json::from_value::<User>(document.clone())?;
+    
+        if api_response.status() != StatusCode::OK {
+            return Err("API request failed".into());
+        }
+    
+        let api_response_json: serde_json::Value = api_response.json().await?;
+        dbg!(&api_response_json);
+    
+        match api_response_json.get("document") {
+            Some(doc) if !doc.is_null() => {
+                let user = serde_json::from_value::<User>(doc.clone())?;
                 Ok(Some(user))
-            } else {
-                Ok(None)
             }
-        } else {
-            Err("API request failed".into())
+            _ => Ok(None),
         }
     }
+    
 
     pub async fn create_user_in_db(&self, user: User) -> Result<User, Box<dyn std::error::Error>> {
         let api_url =
@@ -140,27 +141,14 @@ impl MongodbRepository {
             .send()
             .await?;
 
-        let api_response_status = api_response.status();
-        if api_response_status == StatusCode::CREATED {
-            let api_response_json: serde_json::Value = api_response.json().await?;
-
-            println!("API response status code: {}", api_response_status);
-            println!("API Response JSON: {}", api_response_json);
-
-            if let Some(inserted_id) = api_response_json.get("insertedId") {
-                let inserted_user = User::new(user.email, user.password);
-                Ok(inserted_user)
-            } else {
-                Err("No 'insertedId' field in API response".into())
-            }
-        } else {
-            let api_response_str = api_response.text().await?;
-            eprintln!(
-                "API request failed with status code: {}",
-                api_response_status
-            );
-            eprintln!("{}", api_response_str);
-            Err("API request failed".into())
+        match api_response.status() {
+            StatusCode::CREATED => api_response
+                .json::<serde_json::Value>()
+                .await?
+                .get("insertedId")
+                .map(|_| User::new(user.email, user.password))
+                .ok_or_else(|| "No 'insertedId' field in API response".into()),
+            _ => Err("API request failed".into()),
         }
     }
 
@@ -270,10 +258,6 @@ impl MongodbRepository {
 
                 Ok(inserted_ad)
             } else {
-                eprintln!(
-                    "No 'insertedId' field found in the response: {}",
-                    api_response_json
-                );
                 Err("No 'insertedId' field in API response".into())
             }
         } else {
@@ -317,8 +301,6 @@ impl MongodbRepository {
         let api_response_status = api_response.status();
         if api_response_status == StatusCode::OK {
             let api_response_json: serde_json::Value = api_response.json().await?;
-            println!("API response status code: {}", api_response_status);
-            println!("API Response JSON: {}", api_response_json);
 
             if let Some(deleted_count) = api_response_json.get("deletedCount") {
                 Ok(format!("Deleted {} ad(s)", deleted_count))
