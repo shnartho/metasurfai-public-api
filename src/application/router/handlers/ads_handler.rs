@@ -1,8 +1,8 @@
 use crate::domain::model::ads::Ads;
 use crate::domain::service::ads_service::AdsService;
+use axum::extract::Json;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
-use axum::extract::Json;
 
 pub async fn ads_handler_v1() -> impl IntoResponse {
     let ads_service = AdsService::new();

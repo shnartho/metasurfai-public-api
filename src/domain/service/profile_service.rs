@@ -1,6 +1,26 @@
+use crate::domain::error::AppError;
 use crate::domain::model::profile::Profile;
-use crate::infrastructure::repository::profile_repository;
+use crate::infrastructure::repository::user_repository::UserRepository;
 
-pub async fn get_profile(username: &str) -> Option<Profile> {
-    profile_repository::get_profile_from_db(username)
+pub struct ProfileService {
+    repo: UserRepository,
+}
+
+impl ProfileService {
+    pub fn new() -> Self {
+        ProfileService {
+            repo: UserRepository::new(),
+        }
+    }
+
+    pub async fn get_profile_from_db(&self, email: String) -> Result<Option<Profile>, AppError> {
+        match self.repo.find_user_by_email_from_db(email).await {
+            Ok(Some(user)) => {
+                let profile = Profile::from(user);
+                Ok(Some(profile))
+            }
+            Ok(None) => Err(AppError::InvalidCredentials),
+            Err(_) => Err(AppError::InvalidCredentials),
+        }
+    }
 }

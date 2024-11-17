@@ -17,14 +17,17 @@ impl AdsService {
     }
 
     pub async fn get_ads(&self) -> Result<Vec<Ads>, Box<dyn std::error::Error>> {
-        Ok(self.repo.fetch_ads_from_db().await?)
+        self.repo.fetch_ads_from_db().await
     }
 
-    pub async fn create_ads(&self, ad: Ads) -> Result<CreateAdResponse, Box<dyn std::error::Error>> {
-        Ok(self.repo.create_ads_in_db(ad).await?)
+    pub async fn create_ads(
+        &self,
+        ad: Ads,
+    ) -> Result<CreateAdResponse, Box<dyn std::error::Error>> {
+        self.repo.create_ads_in_db(ad).await
     }
 
     pub async fn delete_ads(&self, id: String) -> Result<(), Box<dyn std::error::Error>> {
-        Ok(self.repo.delete_ads_in_db(id).await?)
+        self.repo.delete_ads_in_db(id).await
     }
 }
