@@ -14,7 +14,7 @@ Welcome to the MetaSurfAI API Server repository! This project provides an API se
 
 - `login` `POST` `https://metasurfai-public-api.fly.dev/v2/login`
 - `signup` `POST` `https://metasurfai-public-api.fly.dev/v2/signup`
-- Both `signup` and `login` requires `email` and `password` as body params
+- both `signup` and `login` requires `email` and `password` as body params
 
 ```json
 {
