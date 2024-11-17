@@ -18,6 +18,8 @@ test:
 run: build
 	$(CARGO) run
 
+start: run
+
 # Check the Rust project (lints, warnings, etc.)
 check:
 	$(CARGO) check

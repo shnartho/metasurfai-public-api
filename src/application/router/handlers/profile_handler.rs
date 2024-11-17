@@ -1,17 +1,16 @@
-use crate::domain::service::profile_service::get_profile;
-use axum::extract::Query;
+use crate::application::router::middlewares::auth::Auth;
+use crate::domain::service::profile_service::ProfileService;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
-use serde::Deserialize;
 
-#[derive(Deserialize)]
-pub struct ProfileQuery {
-    pub username: String,
-}
+pub async fn profile_handler(auth: Auth) -> impl IntoResponse {
+    let profile_service = ProfileService::new();
 
-pub async fn profile_handler(Query(params): Query<ProfileQuery>) -> impl IntoResponse {
-    match get_profile(&params.username).await {
-        Some(profile) => {
+    match profile_service
+        .get_profile_from_db(auth.user_email.clone())
+        .await
+    {
+        Ok(Some(profile)) => {
             let profile_json = serde_json::to_string(&profile).unwrap();
             Response::builder()
                 .status(StatusCode::OK)
@@ -19,7 +18,11 @@ pub async fn profile_handler(Query(params): Query<ProfileQuery>) -> impl IntoRes
                 .body(axum::body::Body::from(profile_json))
                 .unwrap()
         }
-        None => Response::builder()
+        Ok(None) => Response::builder()
+            .status(StatusCode::NOT_FOUND)
+            .body(axum::body::Body::from("Profile not found"))
+            .unwrap(),
+        Err(_) => Response::builder()
             .status(StatusCode::INTERNAL_SERVER_ERROR)
             .body(axum::body::Body::from("Failed to get profile"))
             .unwrap(),
