@@ -19,7 +19,7 @@ Welcome to the MetaSurfAI API Server repository! This project provides an API se
 ```json
 {
     "email":"nayemtest123@gmail.com",
-    "password":"nayemtest123",
+    "password":"nayemtest123"
 }
 ```
 
