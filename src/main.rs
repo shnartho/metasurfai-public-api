@@ -1,16 +1,24 @@
+#![allow(unused)]
+
 mod application;
 mod domain;
 mod infrastructure;
 
-use application::create_router;
+use application::{config::AppConfig, create_router};
+use infrastructure::repository::mongodb_repo::MongodbRepository;
 
 #[tokio::main]
-async fn main() -> Result<(), hyper::Error> {
-    let app = create_router();
-    let addr = "[::]:8080".parse().unwrap();
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let config = AppConfig::load()?;
+    let db_client = MongodbRepository::new().await?;
+    let app_state = application::AppState::new(db_client);
 
-    println!("Server is running on port 8080...");
-    axum::Server::bind(&addr)
+    let app = create_router(app_state);
+
+    println!("Server is running on {}...", config.app_addr);
+    axum::Server::bind(&config.app_addr.parse().unwrap())
         .serve(app.into_make_service())
-        .await
+        .await?;
+
+    Ok(())
 }

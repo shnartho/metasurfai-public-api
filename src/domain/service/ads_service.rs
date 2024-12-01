@@ -6,9 +6,9 @@ pub struct AdsService {
 }
 
 impl AdsService {
-    pub fn new() -> Self {
+    pub fn new(ads_repo: AdsRepository) -> Self {
         AdsService {
-            repo: AdsRepository::new(),
+            repo: ads_repo,
         }
     }
 

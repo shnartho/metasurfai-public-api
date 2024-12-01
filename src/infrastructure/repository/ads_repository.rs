@@ -4,16 +4,17 @@ use crate::{
 };
 use rand::Rng;
 
-pub struct AdsRepository;
+pub struct AdsRepository {
+    db: MongodbRepository,
+}
 
 impl AdsRepository {
-    pub fn new() -> Self {
-        AdsRepository {}
+    pub fn new(db: MongodbRepository) -> Self {
+        AdsRepository {db}
     }
 
     pub async fn fetch_ads_from_db(&self) -> Result<Vec<Ads>, Box<dyn std::error::Error>> {
-        let db = MongodbRepository::new().await?;
-        let ads: Vec<Ads> = db.get_ads_from_mongo_db().await?;
+        let ads: Vec<Ads> = self.db.get_ads_from_mongo_db().await?;
         Ok(ads)
     }
 
@@ -21,14 +22,12 @@ impl AdsRepository {
         &self,
         ad: Ads,
     ) -> Result<CreateAdResponse, Box<dyn std::error::Error>> {
-        let db = MongodbRepository::new().await?;
-        let ads: CreateAdResponse = db.create_ads_in_db(ad).await?;
+        let ads: CreateAdResponse = self.db.create_ads_in_db(ad).await?;
         Ok(ads)
     }
 
     pub async fn delete_ads_in_db(&self, id: String) -> Result<(), Box<dyn std::error::Error>> {
-        let db = MongodbRepository::new().await?;
-        db.delete_ads_by_id(&id).await?;
+        self.db.delete_ads_by_id(&id).await?;
         Ok(())
     }
 
