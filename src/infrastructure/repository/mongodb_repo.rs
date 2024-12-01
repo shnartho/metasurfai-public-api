@@ -6,6 +6,7 @@ use std::env;
 use crate::domain::model::ads::{Ads, CreateAdResponse};
 use crate::domain::model::user::User;
 
+#[derive(Debug, Clone)]
 pub struct MongodbRepository {
     access_token: String,
 }

@@ -11,6 +11,7 @@ use crate::application::router::handlers::{
 use crate::domain::service::{ads_service::AdsService, profile_service::ProfileService, user_service::UserService};
 use crate::infrastructure::repository::ads_repository::AdsRepository;
 use crate::infrastructure::repository::mongodb_repo::MongodbRepository;
+use crate::infrastructure::repository::user_repository::UserRepository;
 use axum::{Extension, Router};
 use tower::ServiceBuilder;
 use tower_http::cors::{Any, CorsLayer};
@@ -25,9 +26,9 @@ pub struct AppState {
 impl AppState {
     pub fn new(db_client: MongodbRepository) -> Self {
         AppState {
-            ads_service: Arc::new(AdsService::new(AdsRepository::new(db_client))),
-            profile_service: Arc::new(ProfileService::new()),
-            user_service: Arc::new(UserService::new())
+            ads_service: Arc::new(AdsService::new(AdsRepository::new(db_client.clone()))),
+            profile_service: Arc::new(ProfileService::new(UserRepository::new(db_client.clone()))),
+            user_service: Arc::new(UserService::new(UserRepository::new(db_client))),
         }
     }
 }
