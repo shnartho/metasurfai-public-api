@@ -13,6 +13,7 @@ use crate::infrastructure::repository::ads_repository::AdsRepository;
 use crate::infrastructure::repository::mongodb_repo::MongodbRepository;
 use crate::infrastructure::repository::user_repository::UserRepository;
 use axum::{Extension, Router};
+use axum::routing::{get, post, delete, patch};
 use tower::ServiceBuilder;
 use tower_http::cors::{Any, CorsLayer};
 
@@ -40,13 +41,13 @@ pub fn create_router(app_state: AppState) -> Router {
         .allow_headers(Any);
 
     Router::new()
-        .route("/v1", axum::routing::get(ads_handler_v1))
-        .route("/v2", axum::routing::get(ads_handler_v2))
-        .route("/v2/login", axum::routing::post(login))
-        .route("/v2/signup", axum::routing::post(signup))
-        .route("/v2/ads", axum::routing::post(create_ads_handler_v2))
-        .route("/v2/ads", axum::routing::delete(delete_ads_handler_v2))
-        .route("/v2/profile", axum::routing::get(profile_handler))
+        .route("/v1", get(ads_handler_v1))
+        .route("/v2", get(ads_handler_v2))
+        .route("/v2/login", post(login))
+        .route("/v2/signup", post(signup))
+        .route("/v2/ads", post(create_ads_handler_v2))
+        .route("/v2/ads", delete(delete_ads_handler_v2))
+        .route("/v2/profile", get(profile_handler))
         .layer(Extension(app_state))
         .layer(ServiceBuilder::new().layer(cors).into_inner())
 }
