@@ -23,6 +23,7 @@ pub fn create_router(app_state: AppState) -> Router {
         .allow_headers(Any);
 
     let router = Router::new()
+        .route("/", get(|| async {"OK"}))
         .route("/v1", get(ads_handler_v1))
         .route("/v2", get(ads_handler_v2))
         .route("/v2/login", post(login))
