@@ -1,6 +1,5 @@
 use crate::domain::error::AppError;
 use crate::domain::model::user::User;
-use crate::domain::service::user_service::UserService;
 use axum::{extract::Json, http::StatusCode};
 use serde::{Deserialize, Serialize};
 use axum::Extension;

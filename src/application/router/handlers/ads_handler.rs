@@ -1,6 +1,5 @@
 use crate::application::AppState;
 use crate::domain::model::ads::Ads;
-use crate::domain::service::ads_service::AdsService;
 use axum::extract::Json;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};

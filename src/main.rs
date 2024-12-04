@@ -1,5 +1,3 @@
-#![allow(unused)]
-
 mod application;
 mod domain;
 mod infrastructure;
@@ -10,7 +8,7 @@ use infrastructure::repository::mongodb_repo::MongodbRepository;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let config = AppConfig::load()?;
-    let db_client = MongodbRepository::new().await?;
+    let db_client = MongodbRepository::new(config.mongo_username, config.mongo_password).await?;
     let app_state = application::AppState::new(db_client);
     let router = create_router(app_state);
 
