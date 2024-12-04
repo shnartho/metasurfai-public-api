@@ -2,7 +2,8 @@ mod application;
 mod domain;
 mod infrastructure;
 
-use application::{config::AppConfig, create_router};
+use application::config::AppConfig;
+use application::router::create_router;
 use infrastructure::repository::mongodb_repo::MongodbRepository;
 
 #[tokio::main]
