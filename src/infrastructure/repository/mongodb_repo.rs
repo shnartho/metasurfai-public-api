@@ -1,25 +1,17 @@
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
 use reqwest::StatusCode;
 use serde_json::json;
-use std::env;
 
 use crate::domain::model::ads::{Ads, CreateAdResponse};
 use crate::domain::model::user::User;
 
+#[derive(Debug, Clone)]
 pub struct MongodbRepository {
     access_token: String,
 }
 
 impl MongodbRepository {
-    pub async fn new() -> Result<Self, Box<dyn std::error::Error>> {
-        let username = env::var("MONGODB_USERNAME").ok();
-        let password = env::var("MONGODB_PASSWORD").ok();
-
-        let (username, password) = match (username, password) {
-            (Some(u), Some(p)) => (u, p),
-            _ => return Err("Missing env variables".into()),
-        };
-
+    pub async fn new(username: String, password: String) -> Result<Self, Box<dyn std::error::Error>> {
         let auth_url = "https://eu-west-2.aws.services.cloud.mongodb.com/api/client/v2.0/app/data-nzlzdhy/auth/providers/local-userpass/login";
         let auth_data = json!({
             "username": username,
@@ -317,10 +309,12 @@ impl MongodbRepository {
 mod tests {
     use super::*;
     use crate::domain::model::ads::Ads;
+    use crate::application::config::AppConfig;
 
     #[tokio::test]
     async fn test_get_ads_from_mongodb_repository() -> Result<(), Box<dyn std::error::Error>> {
-        let repo = MongodbRepository::new().await?;
+        let config = AppConfig::load()?;
+        let repo = MongodbRepository::new(config.mongo_username, config.mongo_password).await?;
         let ads: Vec<Ads> = repo.get_ads_from_mongo_db().await?;
         println!("Retrieved ads: {:?}", ads);
         assert!(!ads.is_empty(), "Expected non-empty ads list");
@@ -329,7 +323,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_create_ads_in_db() -> Result<(), Box<dyn std::error::Error>> {
-        let repo = MongodbRepository::new().await?;
+        let config = AppConfig::load()?;
+        let repo = MongodbRepository::new(config.mongo_username, config.mongo_password).await?;
         let ad = Ads {
             title: "Test ad".to_string(),
             image_url: "https://test.com/image.jpg".to_string(),
@@ -349,7 +344,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_delete_ad_by_id() -> Result<(), Box<dyn std::error::Error>> {
-        let repo = MongodbRepository::new().await?;
+        let config = AppConfig::load()?;
+        let repo = MongodbRepository::new(config.mongo_username, config.mongo_password).await?;
         let test_ads_id = "66fdd9f89505c5e6423d1348";
         let delete_response = repo.delete_ads_by_id(test_ads_id).await?;
         println!("Delete response: {}", delete_response);

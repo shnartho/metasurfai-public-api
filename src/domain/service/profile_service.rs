@@ -7,9 +7,9 @@ pub struct ProfileService {
 }
 
 impl ProfileService {
-    pub fn new() -> Self {
+    pub fn new(profile_repo: UserRepository) -> Self {
         ProfileService {
-            repo: UserRepository::new(),
+            repo: profile_repo,
         }
     }
 

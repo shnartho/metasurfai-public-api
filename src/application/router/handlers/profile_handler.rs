@@ -1,11 +1,12 @@
 use crate::application::router::middlewares::auth::Auth;
-use crate::domain::service::profile_service::ProfileService;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
+use axum::Extension;
+use crate::application::AppState;
 
-pub async fn profile_handler(auth: Auth) -> impl IntoResponse {
-    let profile_service = ProfileService::new();
-
+pub async fn profile_handler(Extension(app_state): Extension<AppState>, auth: Auth) -> impl IntoResponse {
+    let profile_service = app_state.profile_service.clone();
+    
     match profile_service
         .get_profile_from_db(auth.user_email.clone())
         .await

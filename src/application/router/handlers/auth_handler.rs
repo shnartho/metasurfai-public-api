@@ -1,8 +1,9 @@
 use crate::domain::error::AppError;
 use crate::domain::model::user::User;
-use crate::domain::service::user_service::UserService;
 use axum::{extract::Json, http::StatusCode};
 use serde::{Deserialize, Serialize};
+use axum::Extension;
+use crate::application::AppState;
 
 #[derive(Serialize)]
 #[serde(untagged)]
@@ -46,8 +47,8 @@ pub struct ErrorResponse {
     error: String,
 }
 
-pub async fn login(Json(payload): Json<LoginRequest>) -> (StatusCode, Json<LoginResponse>) {
-    let user_service = UserService::new();
+pub async fn login(Extension(app_state): Extension<AppState>, Json(payload): Json<LoginRequest>) -> (StatusCode, Json<LoginResponse>) {
+    let user_service = app_state.user_service.clone();
     let user = User::new(payload.email.clone(), payload.password.clone());
     match user_service.login_user(user).await {
         Ok(token) => (
@@ -66,8 +67,8 @@ pub async fn login(Json(payload): Json<LoginRequest>) -> (StatusCode, Json<Login
     }
 }
 
-pub async fn signup(Json(payload): Json<SignUpRequest>) -> (StatusCode, Json<SignupResponse>) {
-    let user_service = UserService::new();
+pub async fn signup(Extension(app_state): Extension<AppState>, Json(payload): Json<SignUpRequest>) -> (StatusCode, Json<SignupResponse>) {
+    let user_service = app_state.user_service.clone();
     let user = User::new(payload.email.clone(), payload.password.clone());
     match user_service.signup_user(user).await {
         Ok(_) => (
