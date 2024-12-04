@@ -40,7 +40,7 @@ pub fn create_router(app_state: AppState) -> Router {
                     )
                 }))
                 .layer(BufferLayer::new(1024))
-                .layer(RateLimitLayer::new(5, Duration::from_secs(1)))
+                .layer(RateLimitLayer::new(10, Duration::from_secs(60)))
                 .layer(cors)
                 .into_inner(),
         );
