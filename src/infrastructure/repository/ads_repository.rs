@@ -98,6 +98,7 @@ impl AdsRepository {
         for (i, link) in ads_links.iter().enumerate() {
             let random_price = rng.gen_range(1..=100);
             let ad = Ads::new(
+                "test_uuid".to_string(), 
                 ad_titles[i].to_string(),
                 link.to_string(),
                 random_price,

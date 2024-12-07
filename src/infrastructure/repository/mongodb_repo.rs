@@ -4,6 +4,7 @@ use serde_json::json;
 
 use crate::domain::model::ads::{Ads, CreateAdResponse};
 use crate::domain::model::user::User;
+use crate::domain::service::billboard_service::Billboard;
 
 #[derive(Debug, Clone)]
 pub struct MongodbRepository {
@@ -229,14 +230,9 @@ impl MongodbRepository {
         if api_response_status == StatusCode::CREATED {
             let api_response_json: serde_json::Value = api_response.json().await?;
 
-            println!("API response status code: {}", api_response_status);
-            println!("API Response JSON: {}", api_response_json);
-
             if let Some(inserted_id) = api_response_json.get("insertedId") {
-                println!("Inserted document ID: {}", inserted_id);
-
                 let inserted_ad = CreateAdResponse {
-                    id: inserted_id.as_str().unwrap_or_default().to_string(), // assuming Ads has an id field
+                    _id: ad._id,
                     title: ad.title,
                     image_url: ad.image_url,
                     view_count: ad.view_count,
@@ -303,6 +299,48 @@ impl MongodbRepository {
             Err("API request failed".into())
         }
     }
+
+    // +++++++++++++++++++++++++++++++++ billboard ++++++++++++++++++++++++++++++++++
+    // billboard mongo repo
+    pub async fn get_billboards_from_db(&self) -> Result<Vec<Billboard>, Box<dyn std::error::Error>> {
+        let api_url = "https://eu-west-2.aws.data.mongodb-api.com/app/data-nzlzdhy/endpoint/data/v1/action/find";
+        let headers = {
+            let mut headers = reqwest::header::HeaderMap::new();
+            headers.insert(CONTENT_TYPE, "application/json".parse().unwrap());
+            headers.insert(
+                AUTHORIZATION,
+                format!("Bearer {}", self.access_token).parse().unwrap(),
+            );
+            headers
+        };
+
+        let payload = json!({
+            "collection": "billboards",
+            "database": "appmsai",
+            "dataSource": "Cluster0",
+            "filter": {},
+            "limit": 20
+        });
+
+        let client = reqwest::Client::new();
+        let api_response = client
+            .post(api_url)
+            .headers(headers)
+            .json(&payload)
+            .send()
+            .await?;
+
+        let api_response_status = api_response.status();
+        if api_response_status == StatusCode::OK {
+            let api_response_json: serde_json::Value = api_response.json().await?;
+            //println!("API response JSON: {}", api_response_json);
+            let billboards: Vec<Billboard> = serde_json::from_value(api_response_json["documents"].clone())?;
+            Ok(billboards)
+        } else {
+            println!("API request failed with status code: {}", api_response_status);
+            Err("API request failed".into())
+        }
+    }
 }
 
 #[cfg(test)]
@@ -322,10 +360,21 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_get_billboards_from_mongodb_repository() -> Result<(), Box<dyn std::error::Error>> {
+        let config = AppConfig::load()?;
+        let repo = MongodbRepository::new(config.mongo_username, config.mongo_password).await?;
+        let billboards: Vec<Billboard> = repo.get_billboards_from_db().await?;
+        println!("Retrieved ads: {:?}", billboards);
+        assert!(!billboards.is_empty(), "Expected non-empty ads list");
+        Ok(())
+    }
+
+    #[tokio::test]
     async fn test_create_ads_in_db() -> Result<(), Box<dyn std::error::Error>> {
         let config = AppConfig::load()?;
         let repo = MongodbRepository::new(config.mongo_username, config.mongo_password).await?;
         let ad = Ads {
+            _id: "66fdd9f89505c5e6423d1348".to_string(),
             title: "Test ad".to_string(),
             image_url: "https://test.com/image.jpg".to_string(),
             view_count: 0,
