@@ -12,7 +12,11 @@ Welcome to the MetaSurfAI API Server repository! This project provides an API se
 
 ## Test Public Api 🦀
 
+#### Status
+
 - `status` `GET` `https://metasurfai-public-api.fly.dev`
+
+#### Signup/login
 - `login` `POST` `https://metasurfai-public-api.fly.dev/v2/login`
 - `signup` `POST` `https://metasurfai-public-api.fly.dev/v2/signup`
 - both `signup` and `login` requires `email` and `password` as body params
@@ -26,6 +30,8 @@ Welcome to the MetaSurfAI API Server repository! This project provides an API se
 
 - it will return bearer token, use the token to access the profile endpoint 
 - `profile` endpoint `https://metasurfai-public-api.fly.dev/v1/profile` and authorization bearer token
+
+#### Ads (Home)
 
 - get sample ads `GET` `https://metasurfai-public-api.fly.dev/v1`
 - get ads from db `GET` `https://metasurfai-public-api.fly.dev/v2`
@@ -53,5 +59,9 @@ Welcome to the MetaSurfAI API Server repository! This project provides an API se
 }
 ```
 
+#### Billboards
+- get sample billboards `GET` `https://metasurfai-public-api.fly.dev/v2/billboards`
+
+<br>
 
 ![Funny GIF](https://media.giphy.com/media/HCTfYH2Xk5yw/giphy.gif?cid=790b7611q1p4oj3wetxecugn3qgfrnvda5w17sa8qbpq2kbo&ep=v1_gifs_search&rid=giphy.gif&ct=g)
