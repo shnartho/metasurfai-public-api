@@ -61,6 +61,20 @@ Welcome to the MetaSurfAI API Server repository! This project provides an API se
 
 #### Billboards
 - get sample billboards `GET` `https://metasurfai-public-api.fly.dev/v2/billboards`
+```json
+{
+        "_id": "675435cf15c861ffb55708e7",
+        "title": "Silicon Valley Center Billboard",
+        "image_url": "https://i.ibb.co/1850fVV/silicon-valley-center.png",
+        "description": "Located in the heart of Silicon Valley, this billboard reaches an estimated 1 million monthly viewers in a tech-savvy region.",
+        "posted_by": "nayem",
+        "active": true,
+        "region": "Silicon Valley",
+        "bid_price": 8000.0,
+        "created_at": 1701974400,
+        "expires_at": null
+    }
+```
 
 <br>
 
