@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Ads {
+    pub _id: String,
     pub title: String,
     pub image_url: String,
     pub view_count: u64,
@@ -15,7 +16,7 @@ pub struct Ads {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CreateAdResponse {
-    pub id: String,
+    pub _id: String,
     pub title: String,
     pub image_url: String,
     pub view_count: u64,
@@ -29,6 +30,7 @@ pub struct CreateAdResponse {
 
 impl Ads {
     pub fn new(
+        _id: String,
         title: String,
         image_url: String,
         view_count: u64,
@@ -40,6 +42,7 @@ impl Ads {
         token_reward: f64,
     ) -> Self {
         Ads {
+            _id,
             title,
             image_url,
             view_count,

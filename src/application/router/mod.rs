@@ -9,6 +9,7 @@ use crate::application::router::handlers::{
 use crate::application::AppState;
 use axum::{Extension, Router};
 use axum::routing::{get, post, delete};
+use handlers::billboards_handler::get_billboards_handler;
 use tower::ServiceBuilder;
 use tower_http::cors::{Any, CorsLayer};
 use tower::limit::RateLimitLayer;
@@ -24,13 +25,14 @@ pub fn create_router(app_state: AppState) -> Router {
 
     let router = Router::new()
         .route("/", get(|| async {"OK"}))
-        .route("/v1", get(ads_handler_v1))
-        .route("/v2", get(ads_handler_v2))
         .route("/v2/login", post(login))
         .route("/v2/signup", post(signup))
+        .route("/v1/ads", get(ads_handler_v1))
+        .route("/v2/ads", get(ads_handler_v2))
         .route("/v2/ads", post(create_ads_handler_v2))
         .route("/v2/ads", delete(delete_ads_handler_v2))
         .route("/v2/profile", get(profile_handler))
+        .route("/v2/billboards", get(get_billboards_handler))
         .layer(Extension(app_state))
         .layer(
             ServiceBuilder::new()
